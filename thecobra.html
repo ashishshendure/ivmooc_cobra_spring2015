@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<title>CoBRA: GIZMO</title>
+<link rel="stylesheet" href="css/Cobra.css" />
+
+<style>
+
+</style>
+</head>
+<body style="background:#737982">
+
+<script src="js/d3.min.js"></script>
+
+<script>
+
+
+var margin = 20,
+    diameter = 1000;
+
+var color = d3.scale.linear()
+    .domain([-1, 5])
+    .range(["#545d68", "#black"])
+
+
+    //.range(["#5D6362", "#E1E8E7"])
+    
+    //.range(["hsl(334,51%,272%)", "hsl(334,36%,100%)"])
+    .interpolate(d3.interpolateHcl);
+
+var pack = d3.layout.pack()
+    .padding(2.5)
+    .size([diameter - margin, diameter - margin])
+    .value(function(d) { return d.size; })
+    //.sort(function(a,b){return a.value - b.value;})
+ /*    .value(function (d) {
+    return Math.max(d.size, 1);
+}) */;
+
+
+//////////////////////////
+
+var titlesvg = d3.select("body").append("svg")
+.attr("width", 1000)
+.attr("height", 80)
+//.attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")")
+  .style("display","block")
+    .style("margin","auto")
+;
+
+var title = titlesvg.append("g")
+.attr("id","sectionTitle")
+.attr("transform","translate(100,30)")
+.append("text")
+.text("Comic Book Readership Archive (CoBRA) Visualization")
+.attr("font-family", "Helvetica")
+.attr("font-size", "30px" )
+.attr("font-weight", "bold")
+.attr("fill", "#ffffff")
+.style("text-align","center");
+
+var legend  = titlesvg.append("g")
+				//.attr("transform","translate("+(10+30*i)+","+"0)")
+				;		
+
+		legend.append("circle").attr("cx","15").attr("cy","15").attr("r","10")
+				//.attr("class", "leg_rect").attr("d",hexbin.hexagon())
+				.attr("transform","translate(195,50)")
+				.style("fill","#5AD0E8");
+		
+		legend.append("text")
+				.attr("x",20)
+				.attr("y",20)
+				.attr("transform","translate(205,50)")
+				.text("Fantastic Four")
+				.attr("font-family", "Helvetica")
+				.attr("font-size", "12px" )
+		        .attr("fill", "white"); 
+		
+		legend.append("circle").attr("cx","50").attr("cy","15").attr("r","10")
+		//.attr("class", "leg_rect").attr("d",hexbin.hexagon())
+		.attr("transform","translate(290,50)")
+		.style("fill","#F76A6A");
+		
+		legend.append("text")
+				.attr("x",20)
+				.attr("y",20)
+				.attr("transform","translate(335,50)")
+				.text("Avengers")
+				.attr("font-family", "Helvetica")
+				.attr("font-size", "12px" )
+				.attr("fill", "white"); 
+		
+		legend.append("text")
+		.attr("x",20)
+		.attr("y",20)
+		.attr("transform","translate(440,50)")
+		.text("Hierarchy:")
+		.attr("font-family", "Helvetica")
+		.attr("font-size", "12px" )
+		.attr("fill", "white")
+		.style("font-weight","bold"); 
+		
+		legend.append("text")
+		.attr("x",20)
+		.attr("y",20)
+		.attr("transform","translate(505,50)")
+		.text("Country > State > City > Author > Fan mail")
+		.attr("font-family", "Helvetica")
+		.attr("font-size", "12px" )
+		.attr("fill", "white"); 
+		
+		
+//////////////////////////		
+		
+var svg = d3.select("body").append("svg")
+	.attr("id","mainsvg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .style("display","block")
+    .style("margin","auto")
+ 	.append("g")
+    .attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")")
+    
+    ;
+    
+
+    
+var tooltip = d3.select("body")
+.append("div")
+.style("position", "absolute")
+.style("z-index", "10")
+.attr("class", "talkbubble")
+.style("visibility", "hidden")
+.text("a simple tooltip");
+var tooltipHTML = "";
+//cobra_key_value
+d3.json("json/compact_clean_cobra.json", function(error, root) {
+	//console.log(root);
+  if (error) return console.error(error);
+
+  var focus = root,
+      nodes = pack.nodes(root),
+      view;
+
+  var circle = svg.selectAll("circle")
+      .data(nodes)
+    .enter().append("circle")
+     // .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+      .attr("class", function(d) { var className = d.parent ? d.children ? "node" : "node node--leaf" : "node node--root";
+     // console.log(className);
+      if(className == "node node--leaf"){
+    	  
+    	  if(d.ComicName == "Fantastic Four"){
+    		 // d3.select(this).style("fill","red");
+    		 return "node node--leaf fantastic"
+    	  }else if(d.ComicName == "Avengers"){
+    		 // d3.select(this).style("fill","green");
+    		 return "node node--leaf avengers"
+    	  } 
+      }
+      
+      return className;
+      })
+      .style("fill", function(d) {  return d.children ? color(d.depth) : null; })
+      .on("click", function(d) { if (focus !== d) zoom(d), d3.event.stopPropagation(); })
+     //.on("click", clickFct)
+      .on("mouseover", function(d){
+    	 // tooltip
+    	// console.log(d);
+    	 if(d3.select(this).classed("node--leaf")){
+    	// if(d.children.length == 1){
+    		 
+    		 tooltipHTML = 
+    			 			
+		    			 	//"<div style='font-family':'Courier'>"+
+		    			 	"<br/>"
+		 					+"<span><b>"+ d.Name +"</b></span><br/>"
+			 				+"<span>"+ d.ComicName +" Fan</span>"
+			 				+"<span>, "+ d.Gender +"</span><br/>From "
+			 				+"<span>"+ d.Country +", </span>"
+			 				+"<span>"+ d.State +" </span>"
+			 				+"<span>"+ d.City +"</span>"
+			 				+"<br/>"
+			 				+"<span>Issue No:"+ d.Issue +" </span>"
+			 				+"<span>from "+ d.start +"</span>"
+			 				
+			 				+"<br/><br/>"
+			 				+"<span>Note:"+"<br/>"+ d.Note +"</span>"
+			 				+"<br/>";
+			 				//"</div>";    			 
+    			 
+    		 				
+    		  tooltip.html(tooltipHTML).style("visibility", "visible"); 
+    	// }
+    		 
+    	 }
+    	 
+    	  
+      
+      })
+.on("mousemove", function(){return tooltip.style("top",(d3.event.pageY-70)+"px").style("left",(d3.event.pageX+35)+"px");})
+.on("mouseout", function(){return tooltip.style("visibility", "hidden");});;
+
+  function clickFct(d,i) {
+      if (d3.select(this).classed("node--leaf")) {
+          console.log(d); //open URL here
+      } 
+      
+      console.log(d);
+      }
+  var text = svg.selectAll("text")
+      .data(nodes)
+    .enter().append("text")
+      .attr("class", "label")
+      
+      //.style("fill","white")
+      .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
+      .style("display", function(d) { return d.parent === root ? null : "none"; })
+      //.style("fill","white")
+      //.style("stroke","black")
+      .text(function(d) {
+
+    	  return d.name;
+    	  
+      });
+
+  var node = svg.selectAll("circle,text");
+
+  d3.select("body")
+     /*  .style("background", color(-1)) */
+      .on("click", function() { zoom(root); });
+
+  zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+  function zoom(d) {
+    var focus0 = focus; focus = d;
+
+    var transition = d3.select("#mainsvg").transition()
+        .duration(d3.event.altKey ? 7500 : 750)
+        .tween("zoom", function(d) {
+          var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+          return function(t) { zoomTo(i(t)); };
+        });
+
+    transition.selectAll("text")
+      .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
+        .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
+        .each("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
+        .each("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
+  }
+
+  function zoomTo(v) {
+    var k = diameter / v[2]; view = v;3
+    node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
+    circle.attr("r", function(d) { return d.r * k; });
+  }
+});
+
+d3.select(self.frameElement).style("height", diameter + "px");
+
+</script>
+
+
+</body>

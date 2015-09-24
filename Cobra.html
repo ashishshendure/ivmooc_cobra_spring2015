@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="Company" content="Tata Consultancy Services">
+      <meta name="keywords" content="HTML5,CSS3,JavaScript,D3">
+      <meta name="author" content="511463">
+      <title>Cobra Nested View</title>
+   </head>
+   <body>
+     
+      <div id="container_id"></div>
+      
+      <script src="js/d3.js"></script>
+       <script src="js/jquery-2.0.3.js"></script>
+        <script src="js/test.js"></script>
+      <!-- <script src="DATA/shelterData.js"></script> -->
+      <script type="text/javascript">
+      d3.csv("Cobra_CleanedData.csv", function(error, csv_data) {
+    	 
+    	 
+    	 var cobra_data = d3.nest()
+    	  .key(function(d) { return d.Country; })
+    	  .key(function(d) { return d.State; })
+    	  .key(function(d) { return d.City; })
+    	  .key(function(d) { return d.Name; })
+    	  .rollup(function(leaves) { return { "size":leaves.length}; })
+    	    .entries(csv_data);
+    	 //console.log(cobra_data);
+    	 document.write(JSON.stringify(cobra_data));
+      });
+/*       console.log(cobratest);
+      var cobra_data = d3.nest()
+	  .key(function(d) { return d.Country; })
+	//  .key(function(d) { return d.State; })
+	 // .key(function(d) { return d.City; })
+	 // .key(function(d) { return d.Name; })
+	    .entries(cobratest);
+      console.log(cobra_data); */
+      </script>
+   </body>
+</html>

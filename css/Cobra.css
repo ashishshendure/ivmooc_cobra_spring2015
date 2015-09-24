@@ -1,0 +1,127 @@
+@CHARSET "ISO-8859-1";
+
+.node {
+  cursor: pointer;
+}
+
+.node:hover {
+  stroke: #fff;
+  stroke-width: 0.5px;
+}
+
+/* .node--leaf {
+  fill: white;
+} */
+.fantastic{
+fill:#5AD0E8;
+}
+.avengers{
+fill:#F76A6A;
+}
+
+/* .fantastic{
+fill:#DADAF2;
+}
+.avengers{
+fill:#F2DADB;
+} */
+
+.label {
+  font: 18px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-anchor: middle;
+  font-weight:bold;
+  /* text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff; */
+  fill:white;
+  stroke:black;
+  stroke-width:0.6px
+}
+
+.label{
+ pointer-events: none;
+}
+ .node--root{
+pointer-events: all;
+}
+.node--leaf {
+  pointer-events: all;
+}
+
+.talkbubble {
+visibility: hidden;
+position: absolute;
+width: 225px;
+min-height: 147px;
+padding: 0 16px 0 16px;
+background: white;
+border: 1px solid #b0b5b8;
+-webkit-box-shadow: 5px 6px 0px -1px rgba(0,0,0,0.21);
+-moz-box-shadow: 5px 6px 0px -1px rgba(0,0,0,0.21);
+box-shadow: 5px 6px 0px -1px rgba(0,0,0,0.21);
+}
+.talkbubble::before {
+content: "";
+position: absolute;
+top: 60px;
+left: -15px;
+width: 15px;
+height: 28px;
+background: url("../images/tooltip-arrow.png") no-repeat left top;
+}
+.talk-Row01 {
+float: left;
+width: 100%;
+height: auto;
+margin: 0 0 5px 0;
+}
+.talk-Row02 {
+float: left;
+width: 100%;
+height: auto;
+}
+.talk-Row01-Col1 {
+float: left;
+width: 35px;
+height: 36px;
+margin: 15px 0 0 0;
+background: url("images/tooltip-wait-time.png") no-repeat left top;
+}
+.talk-Row01-Col2 {
+float: left;
+width: 132px;
+min-height: 47px;
+margin: 16px 0 0 16px;
+font-family: "open_sansregular";
+font-size: 14px;
+line-height: 18px;
+}
+.talk-Row02-Col1 {
+float: left;
+width: 35px;
+height: 36px;
+margin: 15px 0 0 0;
+background: url("images/tooltip-que-size.png") no-repeat left top;
+}
+.talk-Row02-Col2 {
+float: left;
+width: 132px;
+min-height: 47px;
+margin: 16px 0 0 16px;
+font-family: "open_sansregular";
+font-size: 14px;
+line-height: 18px;
+}
+.lowValue-tooltip {
+font-family: "open_sansbold";
+font-size: 40px;
+color: #509418;
+}
+.highValue-tooltip {
+font-family: "open_sansbold";
+font-size: 38px;
+color: #da3b3a;
+}
+.textColor-Tooltip {
+font-family: "open_sansregular";
+font-size: 15px;
+color: #14406d;
+}

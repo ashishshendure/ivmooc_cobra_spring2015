@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <meta name="Company" content="Tata Consultancy Services">
+      <meta name="keywords" content="HTML5,CSS3,JavaScript,D3">
+      <meta name="author" content="511463">
+      <title>Cobra Nested View</title>
+   </head>
+   <body>
+     
+      <div id="container_id"></div>
+      
+      <script src="js/d3.js"></script>
+       <script src="js/jquery-2.0.3.js"></script>
+        <script src="js/test.js"></script>
+      <!-- <script src="DATA/shelterData.js"></script> -->
+      <script type="text/javascript">
+
+      
+      d3.json("json/compact_json.json", function(error, root) {
+    	  if (error) return console.error(error);
+    	  console.log(root);
+    	  
+    	  
+    	  
+      });
+      
+      
+      
+      </script>
+   </body>
+</html>
